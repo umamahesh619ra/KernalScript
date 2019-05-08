@@ -1,0 +1,40 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker pull yshalsager/lineageos:14.1
+before_script:
+  - cd $HOME && mkdir twrp && PATH=~/bin:$PATH
+  - curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+  - chmod a+x ~/bin/repo
+  - cd $HOME/twrp/
+  - git config --global color.ui false 
+  - repo init --depth=1 -u git://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-8.1
+  - repo sync
+script:
+  - cd $HOME/twrp/ && git clone -b android-8.0 https://github.com/raza231198/twrp_device_asus_X00PD.git device/asus/X00PD
+  - git clone https://github.com/TeamWin/android_device_qcom_common.git -b android-8.0 device/qcom/common
+  - |
+    docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/twrp/:rw,z" yshalsager/lineageos:14.1 bash << EOF
+    cd /home/twrp/
+    export ALLOW_MISSING_DEPENDENCIES=true
+    source build/envsetup.sh && lunch omni_wind-eng && make -j16 recoveryimage
+    exit
+    EOF
+after_success:
+  - export version=$(cat bootable/recovery/variables.h | grep "define TW_MAIN_VERSION_STR" | cut -d '"' -f2)
+  - cp $HOME/twrp/out/target/product/wind/recovery.img $HOME/twrp/TWRP-$version-wind-$(date +"%Y%m%d").img
+
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key: "$GITHUB_TOKEN"
+  file_glob: true
+  file: $HOME/twrp/*.img
+  on:
+    tags: false
+    repo: raza231198/twrp_device_asus_X00PD
+    branch: master
+branches:
+  except:
+    - /^(?i:untagged)-.*$/
