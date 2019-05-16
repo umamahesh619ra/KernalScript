@@ -13,7 +13,7 @@ before_script:
   - repo sync
 script:
   - cd $HOME/twrp/ && git clone -b staging https://github.com/raza231198/twrp_device_asus_X00PD.git device/asus/X00PD
-  - git clone https://github.com/LineageOS/android_vendor_qcom_opensource_cryptfs_hw vendor/qcom/opensource/commonsys/cryptfs_hw
+  - git clone https://github.com/omnirom/android_vendor_qcom_opensource_commonsys vendor/qcom/opensource/commonsys
   - |
     docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/twrp/:rw,z" yshalsager/lineageos:14.1 bash << EOF
     cd /home/twrp/
