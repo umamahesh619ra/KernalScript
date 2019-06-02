@@ -21,18 +21,18 @@ script:
     exit
     EOF
 after_success:
-  - cp $HOME/pbrp/out/target/product/X00PD/*.zip $HOME/pbrp/PBRP-X00PD-$(date +"%Y%m%d").img
+  - cp $HOME/pbrp/out/target/product/X00PD/*.zip $HOME/pbrp/PBRP-X00PD-$(date +"%Y%m%d").zip
 
 deploy:
   skip_cleanup: true
   provider: releases
   api_key: "$GITHUB_TOKEN"
   file_glob: true
-  file: $HOME/pbrp/*.img
+  file: $HOME/pbrp/*.zip
   on:
     tags: false
     repo: raza231198/twrp_X00PD-release
-    branch: master
+    branch: pbrp
 branches:
   except:
     - /^(?i:untagged)-.*$/
