@@ -9,7 +9,7 @@ before_script:
   - chmod a+x ~/bin/repo
   - cd $HOME/pbrp/
   - git config --global color.ui false 
-  - repo init -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b android-9.0
+  - repo init --shallow -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b android-9.0
   - repo sync
 script:
   - cd $HOME/pbrp/ && git clone https://github.com/raza231198/pbrp_device_asus_X00PD.git device/asus/X00PD
