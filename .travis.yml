@@ -1,0 +1,38 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker pull yshalsager/lineageos:14.1
+before_script:
+  - cd $HOME && mkdir pbrp && PATH=~/bin:$PATH
+  - curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+  - chmod a+x ~/bin/repo
+  - cd $HOME/pbrp/
+  - git config --global color.ui false 
+  - repo init -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b android-9.0
+  - repo sync
+script:
+  - cd $HOME/pbrp/ && git clone https://github.com/raza231198/pbrp_device_asus_X00PD.git device/asus/X00PD
+  - |
+    docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/pbrp/:rw,z" yshalsager/lineageos:14.1 bash << EOF
+    cd /home/pbrp/
+    export ALLOW_MISSING_DEPENDENCIES=true
+    source build/envsetup.sh && lunch omni_X00PD-eng && make -j16 recoveryimage
+    exit
+    EOF
+after_success:
+  - cp $HOME/pbrp/out/target/product/X00PD/*.zip $HOME/pbrp/PBRP-X00PD-$(date +"%Y%m%d").img
+
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key: "$GITHUB_TOKEN"
+  file_glob: true
+  file: $HOME/pbrp/*.img
+  on:
+    tags: false
+    repo: raza231198/twrp_X00PD-release
+    branch: master
+branches:
+  except:
+    - /^(?i:untagged)-.*$/
