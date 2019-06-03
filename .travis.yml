@@ -1,0 +1,38 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker pull yshalsager/lineageos:14.1
+before_script:
+  - cd $HOME && mkdir batik && PATH=~/bin:$PATH
+  - curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+  - chmod a+x ~/bin/repo
+  - cd $HOME/batik/
+  - git config --global color.ui false 
+  - repo init --depth=1 -u git://github.com/BatikRecovery/br_manifest.git -b br-asus
+  - repo sync
+script:
+  - cd $HOME/batik/ && git clone https://github.com/raza231198/twrp_device_asus_X00PD.git device/asus/X00PD
+  - |
+    docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/batik/:rw,z" yshalsager/lineageos:14.1 bash << EOF
+    cd /home/batik/
+    export ALLOW_MISSING_DEPENDENCIES=true
+    source build/envsetup.sh && export BR_MAINTAINER="MD Raza" && lunch omni_X00PD-eng && make -j16 recoveryimage
+    exit
+    EOF
+after_success:
+  - cp $HOME/batik/out/target/product/X00PD/BR*.zip $HOME/batik/BatikRecovery-X00PD-$(date +"%Y%m%d").zip
+
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key: "$GITHUB_TOKEN"
+  file_glob: true
+  file: $HOME/batik/*.zip
+  on:
+    tags: false
+    repo: raza231198/twrp_X00PD-release
+    branch: batik
+branches:
+  except:
+    - /^(?i:untagged)-.*$/
