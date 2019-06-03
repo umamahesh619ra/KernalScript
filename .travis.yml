@@ -1,0 +1,38 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker pull yshalsager/lineageos:14.1
+before_script:
+  - cd $HOME && mkdir orange && PATH=~/bin:$PATH
+  - curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+  - chmod a+x ~/bin/repo
+  - cd $HOME/orange/
+  - git config --global color.ui false 
+  - repo init --depth=1 -u https://gitlab.com/OrangeFox/Manifest.git -b fox_8.1
+  - repo sync
+script:
+  - cd $HOME/orange/ && git clone https://github.com/raza231198/twrp_device_asus_X00PD.git device/asus/X00PD
+  - |
+    docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/orange/:rw,z" yshalsager/lineageos:14.1 bash << EOF
+    cd /home/orange/
+    export ALLOW_MISSING_DEPENDENCIES=true
+    source build/envsetup.sh && lunch omni_X00PD-eng && make -j16 recoveryimage
+    exit
+    EOF
+after_success:
+  - cp $HOME/orange/out/target/product/X00PD/OrangeFox*.zip $HOME/orange/OrangeFox-X00PD-$(date +"%Y%m%d").zip
+
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key: "$GITHUB_TOKEN"
+  file_glob: true
+  file: $HOME/orange/*.zip
+  on:
+    tags: false
+    repo: raza231198/twrp_X00PD-release
+    branch: orange
+branches:
+  except:
+    - /^(?i:untagged)-.*$/
