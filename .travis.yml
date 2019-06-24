@@ -28,7 +28,7 @@ deploy:
   provider: releases
   api_key: "$GITHUB_TOKEN"
   file_glob: true
-  file: $HOME/pbrp/*.zip
+  file: $HOME/pbrp/out/target/product/X00PD/PitchBlack*.zip
   on:
     tags: false
     repo: raza231198/twrp_X00PD-release
