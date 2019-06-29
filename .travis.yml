@@ -9,10 +9,10 @@ before_script:
   - chmod a+x ~/bin/repo
   - cd $HOME/pbrp/
   - git config --global color.ui false 
-  - repo init --depth=1 -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b android-9.0
+  - repo init --depth=1 -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b PBRP
   - repo sync
 script:
-  - cd $HOME/pbrp/ && git clone https://github.com/raza231198/pbrp_device_asus_X00PD.git device/asus/X00PD
+  - cd $HOME/pbrp/ && git clone https://github.com/raza231198/pbrp_device_asus_X00PD.git -b android-8.1 device/asus/X00PD
   - |
     docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/pbrp/:rw,z" yshalsager/lineageos:14.1 bash << EOF
     cd /home/pbrp/
