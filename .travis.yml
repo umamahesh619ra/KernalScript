@@ -12,7 +12,7 @@ before_script:
   - repo init --depth=1 -u git://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-8.1
   - repo sync
 script:
-  - cd $HOME/twrp/ && git clone -b android-8.1  https://github.com/umamahesh619ra/twrp_device_asus_X00RD.git device/asus/X00P
+  - cd $HOME/twrp/ && git clone -b android-8.1  https://github.com/umamahesh619ra/twrp_device_asus_X00RD.git device/asus/X00RD
   - |
     docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/twrp/:rw,z" yshalsager/lineageos:14.1 bash << EOF
     cd /home/twrp/
