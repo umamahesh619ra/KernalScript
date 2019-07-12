@@ -17,12 +17,12 @@ script:
     docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/twrp/:rw,z" yshalsager/lineageos:14.1 bash << EOF
     cd /home/twrp/
     export ALLOW_MISSING_DEPENDENCIES=true
-    source build/envsetup.sh && lunch omni_X00P-eng && make -j16 recoveryimage
+    source build/envsetup.sh && lunch omni_X00RD-eng && make -j16 recoveryimage
     exit
     EOF
 after_success:
   - export version=$(cat bootable/recovery/variables.h | grep "define TW_MAIN_VERSION_STR" | cut -d '"' -f2)
-  - cp $HOME/twrp/out/target/product/X00P/recovery.img $HOME/twrp/TWRP-$version-X00P-$(date +"%Y%m%d").img
+  - cp $HOME/twrp/out/target/product/X00RD/recovery.img $HOME/twrp/TWRP-$version-X00RD-$(date +"%Y%m%d").img
 
 deploy:
   skip_cleanup: true
