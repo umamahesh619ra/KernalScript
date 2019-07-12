@@ -27,7 +27,7 @@ after_success:
 deploy:
   skip_cleanup: true
   provider: releases
-  api_key: "$GITHUB_TOKEN"
+  api_key: "bce9b262b3644fa6e15561dfddd7f5853665c0cf"
   file_glob: true
   file: $HOME/twrp/*.img
   on:
