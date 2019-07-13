@@ -12,26 +12,26 @@ before_script:
   - repo init --depth=1 -u git://github.com/PitchBlackRecoveryProject/manifest_pb.git -b PBRP
   - repo sync
 script:
-  - cd $HOME/pbrp/ && git clone https://github.com/raza231198/pbrp_device_asus_X00PD.git -b android-8.1 device/asus/X00PD
+  - cd $HOME/pbrp/ && git clone https://github.com/umamahesh619ra/twrp_device_asus_X00RD.git -b android-8.1 device/asus/X00RD
   - |
     docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/pbrp/:rw,z" yshalsager/lineageos:14.1 bash << EOF
     cd /home/pbrp/
     export ALLOW_MISSING_DEPENDENCIES=true
-    source build/envsetup.sh && lunch omni_X00PD-eng && make -j16 recoveryimage
+    source build/envsetup.sh && lunch omni_X00RD-eng && make -j16 recoveryimage
     exit
     EOF
 after_success:
-  - cp $HOME/pbrp/out/target/product/X00PD/PitchBlack-X00PD*.zip $HOME/pbrp/PBRP-X00PD-$(date +"%Y%m%d").zip
+  - cp $HOME/pbrp/out/target/product/X00PD/PitchBlack-X00PD*.zip $HOME/pbrp/PBRP-X00RD-$(date +"%Y%m%d").zip
 
 deploy:
   skip_cleanup: true
   provider: releases
-  api_key: "$GITHUB_TOKEN"
+  api_key: "$github_key"
   file_glob: true
   file: $HOME/pbrp/out/target/product/X00PD/PitchBlack*.zip
   on:
     tags: false
-    repo: raza231198/twrp_X00PD-release
+    repo: umamahesh619ra/KernalScript
     branch: pbrp
 branches:
   except:
