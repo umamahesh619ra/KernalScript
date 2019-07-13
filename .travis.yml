@@ -27,12 +27,12 @@ after_success:
 deploy:
   skip_cleanup: true
   provider: releases
-  api_key: "bce9b262b3644fa6e15561dfddd7f5853665c0cf"
+  api_key: "$GITHUB_TOKEN"
   file_glob: true
   file: $HOME/twrp/*.img
   on:
     tags: false
-    repo: https://github.com/umamahesh619ra/KernalScript.git
+    repo: umamahesh619ra/KernalScript
     branch: master
 branches:
   except:
