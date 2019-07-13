@@ -27,7 +27,8 @@ after_success:
 deploy:
   skip_cleanup: true
   provider: releases
-  api_key:  db5c7bddf48e33216f10adfe6ef4a8152e879fb9
+  api_key:  
+         secure: db5c7bddf48e33216f10adfe6ef4a8152e879fb9
   file_glob: true
   file: $HOME/twrp/*.img
   on:
