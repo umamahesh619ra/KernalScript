@@ -32,7 +32,7 @@ deploy:
   file: $HOME/twrp/*.img
   on:
     tags: false
-    repo: umamahesh619ra/KernalScript
+    repo: https://github.com/umamahesh619ra/KernalScript.git
     branch: master
 branches:
   except:
