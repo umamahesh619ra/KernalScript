@@ -12,17 +12,16 @@ before_script:
   - repo init --depth=1 -u git://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git -b twrp-8.1
   - repo sync
 script:
-  - cd $HOME/twrp/ && git clone   https://github.com/umamahesh619ra/device_asus_X00R.git device/asus/X00R
-  - |
+  - cd $HOME/twrp/ && git clone   https://github.com/thelazyindian/android_device_xiaomi_lavender-twrp.git
     docker run --rm -i -e USER_ID=$(id -u) -e GROUP_ID=$(id -g) -v "$(pwd):/home/twrp/:rw,z" yshalsager/lineageos:14.1 bash << EOF
     cd /home/twrp/
     export ALLOW_MISSING_DEPENDENCIES=true
-    source build/envsetup.sh && lunch omni_X00R-eng && make -j16 recoveryimage
+    source build/envsetup.sh && lunch omni_lavender-eng && make -j16 recoveryimage
     exit
     EOF
 after_success:
   - export version=$(cat bootable/recovery/variables.h | grep "define TW_MAIN_VERSION_STR" | cut -d '"' -f2)
-  - cp $HOME/twrp/out/target/product/X00R/recovery.img $HOME/twrp/TWRP-$version-X00R-$(date +"%Y%m%d").img
+  - cp $HOME/twrp/out/target/product/lavender/recovery.img $HOME/twrp/TWRP-$version-lavender-$(date +"%Y%m%d").img
 
 deploy:
   skip_cleanup: true
